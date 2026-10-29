@@ -8,6 +8,19 @@ print('Python:', sys.version.split()[0], sys.executable)
 if sys.version_info < (3,10): print('ERRO: instale Python >= 3.10')
 for package in ('playwright','numpy','PIL'):
     print(f'{package}:', 'OK' if importlib.util.find_spec(package) else 'FALTA (pip install -r requirements.txt)')
+print('--- HyperFrames (caminho preferencial) ---')
+for command in ('node','npm','hyperframes'):
+    executable=shutil.which(command)
+    print(f'{command}:', executable or 'FALTA / não global (pode usar npx)')
+if shutil.which('node'):
+    try:
+        r=subprocess.run(['node','--version'],capture_output=True,text=True,timeout=5)
+        print('Node.js versão:', r.stdout.strip() or r.stderr.strip())
+        major=int(r.stdout.strip().removeprefix('v').split('.')[0])
+        if major<22: print('AVISO: HyperFrames requer Node.js >= 22')
+    except Exception as exc: print('Node.js: versão não determinada:',str(exc)[:120])
+print('O diagnóstico não baixa HyperFrames; execute npx hyperframes doctor após instalar.')
+print('--- Fallback Python ---')
 for command in ('ffmpeg', 'ffprobe'):
     executable=shutil.which(command)
     print(f'{command}:', executable or 'FALTA (https://ffmpeg.org/download.html)')
