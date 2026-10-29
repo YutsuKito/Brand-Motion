@@ -1,6 +1,18 @@
 # Dependências e instalação
 
-## Obrigatórias para gerar MP4 local
+## Preferenciais para HyperFrames
+
+- **Node.js >=22:** https://nodejs.org/en/download
+- **FFmpeg + FFprobe:** https://ffmpeg.org/download.html
+- **CLI HyperFrames:** instalar com npm install -g hyperframes; docs https://hyperframes.app/docs/5-packages/cli
+- **Skills oficiais:** npx skills add heygen-com/hyperframes (instalação requer aprovação)
+- **Python >=3.10:** script export_hyperframes.py para manifest e assets.
+- **Diagnóstico:** npx hyperframes doctor, depois npx hyperframes lint/render dentro do projeto.
+
+Para converter um manifest em projeto HyperFrames, veja [hyperframes.md](hyperframes.md). O CLI ainda precisa ser testado no ambiente final: não foi possível baixar o pacote pelo npm neste ambiente.
+
+## Obrigatórias somente para o fallback Python
+
 
 - **Python 3.10+** (executa gerador, QA e instalador): https://www.python.org/downloads/
 - **FFmpeg e FFprobe** (composição, encode, checagem): https://ffmpeg.org/download.html
@@ -13,7 +25,7 @@
 - **Git** para clonar repositórios autorizados: https://git-scm.com/downloads
 - **Node.js LTS** se for animar frontend real em GSAP/Remotion: https://nodejs.org/en/download
 - **GSAP** (motion avançado) https://gsap.com/docs/v3/; **Remotion** (vídeo via React) https://www.remotion.dev/docs; **Three.js** (3D) https://threejs.org/docs/; instale somente se o roteiro precisar.
-- **HyperFrames**: apenas quando CLI oficial acessível e confirmada. Esta skill **não depende** do HyperFrames nem finge usar seu CLI.
+- **HyperFrames** é preferencial para novas produções (veja a seção acima); o motor Python é alternativa, não a implementação do HyperFrames.
 - Geradores de imagens ou vídeo: dependem de serviço, credenciais e direitos de uso específicos; não são exigidos pelo baseline.
 - Bancos de música: Mixkit https://mixkit.co/free-stock-music/ ou Pixabay https://pixabay.com/music/; checar licença de cada faixa e plataforma de distribuição. Música original sintetizada localmente não requer download de gravações alheias.
 
