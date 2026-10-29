@@ -6,19 +6,55 @@ Gera vídeos **Full HD 1920×1080, 16:9, 30 FPS**. **HyperFrames (CLI oficial) �
 
 ![Exemplo de dashboard fictício](brand-motion-v27/examples/demo-saas/assets/sample-dashboard.svg)
 
-> **Segurança e privacidade:** este repositório contém **somente o motor genérico, a skill e exemplos fictícios**. Não inclui vídeos do Aegis Forge, telas reais de clientes, tokens ou credenciais. Antes de produzir, forneça somente materiais que você tem autorização para usar.
+> **Segurança e privacidade:** este repositório contém **somente o motor genérico, a skill e exemplos fictícios**. Não inclui vídeos do marca de exemplo, telas reais de clientes, tokens ou credenciais. Antes de produzir, forneça somente materiais que você tem autorização para usar.
 
 ## Requisitos
 
 - [Python 3.10+](https://www.python.org/downloads/)
 - [FFmpeg + FFprobe](https://ffmpeg.org/download.html), disponíveis no `PATH`
-- [Git](https://git-scm.com/downloads) (para clonar o projeto)
+- [Git](https://git-scm.com/downloads) (opcional; necessário apenas para o fluxo manual por clone)
 - Bibliotecas Python: Playwright, NumPy e Pillow (arquivo `requirements.txt`)
 - Chromium instalado pelo Playwright: `python -m playwright install chromium`
 
 **Para usar HyperFrames (recomendado):** Node.js 22+, FFmpeg, CLI HyperFrames e skills oficiais. Python 3.10+ também é usado pelo exportador Brand Motion. GSAP, Remotion e Three.js não são necessários ao baseline; GSAP pode ser usado para novas timelines. Sem HyperFrames, use o fallback Playwright documentado abaixo.
 
-## 1. Clonar
+## Instalação rápida — 1 comando, sem clonar o repositório
+
+**Requer Node.js 22.20+**. O instalador de Agent Skills obtém a skill diretamente do GitHub, sem exigir um clone manual. Instalação global em **Claude Code, Codex, OpenCode e Hermes Agent**:
+
+~~~powershell
+npx skills add YutsuKito/Brand-Motion --skill brand-motion-v27 -g -a claude-code -a codex -a opencode -a hermes-agent -y
+~~~
+
+Se preferir, use a URL direta da pasta:
+
+~~~powershell
+npx skills add https://github.com/YutsuKito/Brand-Motion/tree/main/brand-motion-v27 --skill brand-motion-v27 -g
+~~~
+
+Para **um único agente**, por exemplo Codex:
+
+~~~powershell
+npx skills add YutsuKito/Brand-Motion --skill brand-motion-v27 -g -a codex -y
+~~~
+
+Por padrão, **sem** -g, a CLI instala no projeto atual. Para inspecionar antes de instalar:
+
+~~~powershell
+npx skills add YutsuKito/Brand-Motion --list
+~~~
+
+Para verificar/atualizar:
+
+~~~powershell
+npx skills list -g
+npx skills check
+npx skills update -g
+~~~
+
+**Importante:** a CLI instala os arquivos da skill, **não instala automaticamente** FFmpeg, Python, HyperFrames ou os próprios agentes. Veja [dependências](brand-motion-v27/references/dependencies.md) e [instalação dos agentes](brand-motion-v27/references/install-agents.md). No Windows, se Hermes usar HERMES_HOME personalizado, confira onde a CLI instalou a skill e se Hermes lê a mesma pasta.
+
+## Instalação manual — alternativa via clone
 
 ```bash
 git clone https://github.com/YutsuKito/Brand-Motion.git
