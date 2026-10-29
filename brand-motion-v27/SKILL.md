@@ -17,7 +17,7 @@ Faça perguntas curtas ao usuário **apenas sobre dados ainda desconhecidos** e 
 1. **Qual marca/produto/serviço?** Nome, site oficial e o que vende/oferece.
 2. **Qual o objetivo e CTA?** Demonstrar, vender, divulgar, testar grátis, comprar, conhecer planos, reservar etc. Confirme ofertas e URLs.
 3. **Quais materiais reais existem?** Peça logo/favicon, capturas de telas, imagens do produto, fotos do estabelecimento, vídeos ou link do site. Pergunte se pode usar esses assets na peça.
-4. **Há referência visual?** Peça um vídeo, link, imagem ou exemplo de estilo. Ofereça o V27 incluído em `assets/reference-v27/` como referência, sem impor sua identidade.
+4. **Há referência visual?** Peça um vídeo, link, imagem ou exemplo de estilo. Explique o estilo V27 descrito nesta skill e peça referências visuais próprias do usuário, sem impor identidade de outra marca.
 5. **Onde vai publicar?** Por padrão entregue 16:9, 1920×1080, 30 FPS; pergunte quando houver preferência diferente de formato/duração, idioma ou trilha.
 
 Se faltar uma imagem essencial e não houver ferramenta de captação/geração permitida, use um placeholder **apenas na prévia** e informe o que falta para uma versão final. Não reproduza slogans, ofertas, preços, logos, pessoas ou resultados não verificados.
