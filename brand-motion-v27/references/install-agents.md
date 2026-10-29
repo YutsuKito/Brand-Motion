@@ -2,7 +2,31 @@
 
 O instalador `scripts/install_skill.py` copia a pasta da skill para o local que cada agente escaneia; não instala o agente em si. Reinicie a sessão ou atualize a lista de skills após instalar.
 
-## Instalação rápida
+## Instalação direta do GitHub (recomendada)
+
+Com Node.js 22.20+ instalado, **não é necessário clonar o repositório**.
+
+~~~bash
+npx skills add YutsuKito/Brand-Motion --skill brand-motion-v27 -g -a claude-code -a codex -a opencode -a hermes-agent -y
+~~~
+
+Alternativa com o endereço direto da pasta:
+
+~~~bash
+npx skills add https://github.com/YutsuKito/Brand-Motion/tree/main/brand-motion-v27 --skill brand-motion-v27 -g
+~~~
+
+Instalação em apenas um agente:
+
+~~~bash
+npx skills add YutsuKito/Brand-Motion --skill brand-motion-v27 -g -a opencode -y
+~~~
+
+Para instalar apenas no projeto atual, omita -g. Verifique com npx skills list -g e atualize com npx skills update -g. Hermes Agent na CLI usa a opção hermes-agent (não hermes). Se HERMES_HOME estiver alterado, confira o destino efetivo da instalação.
+
+Este comando não instala HyperFrames, Python, Chromium ou FFmpeg. Consulte dependencies.md e hyperframes.md.
+
+## Instalação manual via script/ZIP
 
 Na pasta onde você extraiu o ZIP (pasta externa ao diretório `brand-motion-v27`):
 
