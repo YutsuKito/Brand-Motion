@@ -12,6 +12,21 @@ metadata:
 
 ## Primeiro contato: briefing, sem começar a inventar
 
+### Comportamento obrigatório ao iniciar uma produção
+
+Quando o usuário apenas acionar a skill, **não comece a renderizar e não assuma uma marca fictícia**. Inicie uma conversa breve para coletar o mínimo necessário. A primeira pergunta deve estabelecer **marca/produto + site ou descrição**. Depois peça **materiais visuais reais ou links de referência**, **objetivo/CTA** e **formato/duração** somente se ainda estiverem ausentes. Aceite respostas parciais, uma conversa por vez; não use um formulário longo ou exija tudo de uma só vez.
+
+Se o usuário já forneceu marca, site, screenshots, produto e CTA, não repita as perguntas; confirme apenas lacunas essenciais (como permissão de uso das imagens) antes de executar. Não gere o MP4 final com placeholders. Pode montar roteiro e storyboard preliminares, desde que os elementos fictícios sejam claramente indicados.
+
+**Exemplo de primeira resposta sem briefing:**
+> Qual marca ou produto você quer apresentar? Pode enviar o site ou uma descrição rápida. Depois vou pedir as imagens, telas ou referências visuais para montar o vídeo.
+
+Ao receber a marca/site:
+> Você tem logo, fotos ou capturas da aplicação, ou links de vídeos cujo estilo deseja seguir? Posso usar esses materiais no vídeo?
+
+Antes da produção final, confirme o CTA e a página de destino, se aplicáveis, e registre a licença/proveniência dos assets.
+
+
 Faça perguntas curtas ao usuário **apenas sobre dados ainda desconhecidos** e aceite respostas parciais. Se já houver informações ou anexos, use-os sem pedir novamente. Perguntas prioritárias:
 
 1. **Qual marca/produto/serviço?** Nome, site oficial e o que vende/oferece.
