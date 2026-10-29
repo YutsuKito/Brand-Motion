@@ -18,6 +18,13 @@ Gera vídeos **Full HD 1920×1080, 16:9, 30 FPS**. **HyperFrames (CLI oficial) �
 
 **Para usar HyperFrames (recomendado):** Node.js 22+, FFmpeg, CLI HyperFrames e skills oficiais. Python 3.10+ também é usado pelo exportador Brand Motion. GSAP, Remotion e Three.js não são necessários ao baseline; GSAP pode ser usado para novas timelines. Sem HyperFrames, use o fallback Playwright documentado abaixo.
 
+## 1. Clonar
+
+```bash
+git clone https://github.com/YutsuKito/Brand-Motion.git
+cd Brand-Motion
+```
+
 ## HyperFrames — motor recomendado
 
 Além da skill Brand Motion, instale as skills oficiais do HyperFrames e o CLI:
@@ -41,13 +48,6 @@ npx hyperframes render --output final.mp4 --fps 30 --quality high
 ~~~
 
 O exemplo é fictício; substitua os assets antes de publicar. O exportador utiliza o protocolo seekable do HyperFrames, mas **a execução do CLI ainda depende de validação na máquina do agente**. Neste ambiente, o npm estava indisponível, então não declaramos um render HyperFrames aprovado. Use o fallback Python se necessário. Guia detalhado: [HyperFrames e integração](brand-motion-v27/references/hyperframes.md).
-
-## 1. Clonar
-
-```bash
-git clone https://github.com/YutsuKito/Brand-Motion.git
-cd Brand-Motion
-```
 
 ## 2. Instalar a skill em todos os agentes
 
