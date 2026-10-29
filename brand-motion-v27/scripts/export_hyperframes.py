@@ -72,8 +72,12 @@ def export(config: Path, destination: Path, replace: bool, audio: Path | None) -
             f'data-duration="{duration:.4f}" data-track-index="1" '
             f'src="assets/{audio.name}"></audio>'
         )
+    # Coloque a faixa dentro do elemento raiz da composição.
+    if audio_html:
+        if "</div><script>" not in html:
+            raise ValueError("Não foi possível inserir áudio no elemento raiz")
+        html = html.replace("</div><script>", audio_html + "</div><script>", 1)
     protocol = f"""
-{audio_html}
 <script>
 window.initProject({payload});
 // Interface seekable documentada pelo HyperFrames; sem depender de tempo de relógio.
