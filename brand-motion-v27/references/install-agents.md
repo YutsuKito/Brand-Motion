@@ -55,14 +55,14 @@ Pode selecionar apenas um: `--agent codex`, `--agent claude`, `--agent opencode`
 
 | Agente | Comando recomendado |
 | --- | --- |
-| OpenCode v2 | \`@brand-motion-v27\` |
-| Codex | \`$brand-motion-v27\` |
-| Claude Code | \`/brand-motion-v27\` |
-| Hermes | \`/brand-motion-v27\` |
+| OpenCode v2 | `@brand-motion-v27` |
+| Codex | `$brand-motion-v27` |
+| Claude Code | `/brand-motion-v27` |
+| Hermes | `/brand-motion-v27` |
 
-Se a skill não aparecer, reinicie a sessão, confira a instalação e, no OpenCode, confira as permissões da ferramenta \`skill\`. O caractere \`@\` é documentado para OpenCode v2, **não** como sintaxe universal.
+Se a skill não aparecer, reinicie a sessão, confira a instalação e, no OpenCode, confira as permissões da ferramenta `skill`. O caractere `@` é documentado para OpenCode v2, **não** como sintaxe universal.
 
-**Teste de briefing:** acione a skill com \`Quero um vídeo da minha marca; antes de produzir, faça as perguntas necessárias e peça imagens ou referências.\` O agente deve perguntar ao menos o que é a marca/produto e como obter exemplos visuais, sem renderizar imediatamente.
+**Teste de briefing:** acione a skill com `Quero um vídeo da minha marca; antes de produzir, faça as perguntas necessárias e peça imagens ou referências.` O agente deve perguntar ao menos o que é a marca/produto e como obter exemplos visuais, sem renderizar imediatamente.
 
 ## Acionamento (alternativo via linguagem natural)
 
