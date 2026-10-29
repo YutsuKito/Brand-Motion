@@ -4,7 +4,7 @@ description: Produz vídeos comerciais demonstrativos para SaaS, aplicativos, si
 compatibility: Codex, Claude Code, OpenCode, Hermes e agentes que leem Agent Skills SKILL.md e podem executar Python, Chromium e FFmpeg.
 metadata:
   format: "16:9"
-  engine: playwright-ffmpeg
+  engine: hyperframes-preferred; playwright-ffmpeg-fallback
   version: "1.0.0"
 ---
 
@@ -30,15 +30,33 @@ Se faltar uma imagem essencial e não houver ferramenta de captação/geração 
 - **Final (~5 s)**: feche/retire a interface; fundo claro; marca, CTA principal, CTA secundário opcional, domínio e nuvens discretas atrás do conteúdo. CTA isolado e legível.
 - Não use boxes gigantes, destaques/retângulos nos campos, nem motion simultâneo ao texto; o software ou produto deve ser protagonista. Texto nunca se sobrepõe ao conteúdo.
 
+## Motor de vídeo: HyperFrames preferencial
+
+Para novos projetos, **priorize HyperFrames oficial**, não afirme usá-lo quando o MP4 foi produzido com o fallback. Antes de executar downloads ou instalações, peça consentimento. Siga [references/hyperframes.md](references/hyperframes.md): Node.js 22+, FFmpeg, HyperFrames CLI e skills oficiais do HyperFrames. O motor aceita composições HTML seekable pelo protocolo window.__hf; o exportador da Brand Motion gera uma composição a partir do manifest e utiliza os mesmos 4s explicação / 3,5s zoom centralizado / retorno / CTA.
+
+Fluxo preferencial após briefing, assets e validação do manifest:
+
+~~~bash
+npx hyperframes doctor
+npx hyperframes init meu-video --example blank
+python scripts/export_hyperframes.py --config CAMINHO/manifest.json --project meu-video --replace
+cd meu-video
+npx hyperframes lint
+npx hyperframes preview
+npx hyperframes render --output final.mp4 --fps 30 --quality high
+~~~
+
+Os caminhos relativos variam conforme a pasta do agente; use o caminho real do script. Não reutilize as imagens fictícias dos exemplos como se fossem telas da marca. Quando o CLI estiver indisponível ou falhar, documente a falha e use o renderizador Python (passos abaixo) somente como fallback. O exportador HyperFrames foi implementado, mas o CLI não pôde ser testado neste ambiente; nunca o declare validado sem rodar lint/render/QA na máquina de destino.
+
 ## Pipeline obrigatório
 
-1. **Auditar ambiente:** `python scripts/doctor.py`. Consulte `references/dependencies.md`; instalar somente com consentimento, conferindo licenças e permissões. Verifique Python, Playwright/Chromium, Pillow, NumPy e FFmpeg. Nunca force instalação de browser em máquina corporativa.
+1. **Auditar ambiente:** rode `npx hyperframes doctor` para o modo preferencial e `python scripts/doctor.py` para o fallback. Consulte `references/dependencies.md`; instalar somente com consentimento, conferindo licenças e permissões. Verifique Python, Playwright/Chromium, Pillow, NumPy e FFmpeg. Nunca force instalação de browser em máquina corporativa.
 2. **Pesquisar e coletar:** use materiais do cliente primeiro. Faça capturas do site apenas se a ferramenta e as permissões de acesso existirem. Documente fontes/licenças em `assets-ledger.csv`. Jamais remova marcas d'água nem use imagens protegidas sem licença. Se for UI autenticada, solicite screenshots ou acesso aprovado, sem pedir senhas em chat.
 3. **Roteirizar:** 3 a 7 cenas (painel, função, benefício, exemplo, relatório etc.), cada uma com título curto, uma frase descritiva e imagem/tela associada. Para lojas e produtos físicos, use fotografia/B-roll e movimento de câmera, **não simule cliques**.
 4. **Preparar projeto:** copie `templates/project.example.json` e `templates/assets` para uma pasta de produção. Atualize marca, site, ícones, imagens e cenas. O arquivo `manifest.json` é a única fonte de duração, texto, CTA, assets e navegação do template genérico.
 5. **Validar fontes e timeline:** `python scripts/validate_project.py --config caminho/manifest.json`. As telas devem ser reais ou identificadas como ilustrações. Para clique, registre alvo `click_target` normalizado e verificado manualmente na **imagem da cena de origem** (ex.: item Aplicações). Se não houver essa confirmação, omita o clique.
-6. **Gerar prévia** com `python scripts/render_video.py --config caminho/manifest.json --output caminho/output --preview-only`. Examine abertura, pontos de foco, trocas de cena, último quadro e CTA. Ajuste composições antes de renderizar tudo.
-7. **Renderizar** com `python scripts/render_video.py --config caminho/manifest.json --output caminho/output`. Use FFmpeg H.264/AAC e música original gerada localmente, ou faixa externa com licença confirmada. Exporte MP4, contact sheet, timeline e QA.
+6. **Gerar prévia** com `npx hyperframes preview` no projeto exportado; para fallback use `python scripts/render_video.py --config caminho/manifest.json --output caminho/output --preview-only`. Examine abertura, pontos de foco, trocas de cena, último quadro e CTA. Ajuste composições antes de renderizar tudo.
+7. **Renderizar:** use HyperFrames como padrão (comandos acima). Quando não estiver disponível, execute o fallback com `python scripts/render_video.py --config caminho/manifest.json --output caminho/output`. Use FFmpeg H.264/AAC e música original gerada localmente, ou faixa externa com licença confirmada. Exporte MP4, contact sheet, timeline e QA.
 8. **QA final:** executar `python scripts/qa.py --video caminho/output/final.mp4 --config caminho/manifest.json`. Verifique 16:9, duração, FPS, áudio, quadro centralizado, clipping, sincronismo click/evento, fontes, CTA e reprodução; não declare aprovado aquilo que não foi testado.
 9. **Entregar** MP4, storyboard, assets com proveniência, projeto editável e sumário das verificações. Sem afirmar ser gravação ao vivo se for reconstrução ilustrativa.
 
