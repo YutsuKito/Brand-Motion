@@ -4,7 +4,19 @@
 
 A skill prioriza o **HyperFrames oficial (CLI)** para novos projetos e preserva um **fallback Python/Playwright/FFmpeg**. Inclui exportador HTML seekable, áudio/SFX original, instalador para quatro agentes, exemplos e checklist. O baseline é **motion 2D**, não gerador de vídeos realistas por IA.
 
-## 1 — Instalar no agente
+## Instalação rápida — sem clone
+
+Requer Node.js 22.20+. Para instalar globalmente em Claude Code, Codex, OpenCode e Hermes:
+
+~~~powershell
+npx skills add YutsuKito/Brand-Motion --skill brand-motion-v27 -g -a claude-code -a codex -a opencode -a hermes-agent -y
+~~~
+
+Para apenas um agente, troque a lista após -a, por exemplo: -a claude-code. Para instalar somente no projeto corrente, omita -g. Consulte [README principal](../README.md) e [instalação por agente](references/install-agents.md).
+
+A CLI instala a **skill**, não os motores de renderização. Instale HyperFrames/FFmpeg/Python separadamente e valide o ambiente. O método por ZIP abaixo continua disponível como alternativa.
+
+## 1 — Instalação manual/ZIP
 
 Extraia este ZIP. Dentro da pasta que contém `brand-motion-v27/`:
 
