@@ -2,7 +2,7 @@
 
 **Skill universal para criar vídeos promocionais e demonstrações de produtos com agentes de IA.** Compatível com **Codex, Claude Code, OpenCode e Hermes** que suportem Agent Skills e execução local de scripts.
 
-Gera vídeos **Full HD 1920×1080, 16:9, 30 FPS**, usando Python + Playwright/Chromium + FFmpeg. O template cria uma apresentação com 4 segundos de explicação, 3,5 segundos de zoom centralizado, navegação sincronizada (para software) e um CTA final. Suporta **SaaS, aplicativos, sites, e-commerce, produtos físicos, lojas e serviços**. Não depende de API paga e não é um gerador de vídeos 3D/realistas por IA.
+Gera vídeos **Full HD 1920×1080, 16:9, 30 FPS**. **HyperFrames (CLI oficial) é o motor preferencial**; Python + Playwright/Chromium + FFmpeg permanece disponível como alternativa, especialmente para projetos legados. O template cria uma apresentação com 4 segundos de explicação, 3,5 segundos de zoom centralizado, navegação sincronizada (para software) e um CTA final. Suporta **SaaS, aplicativos, sites, e-commerce, produtos físicos, lojas e serviços**. Não depende de API paga e não é um gerador de vídeos 3D/realistas por IA.
 
 ![Exemplo de dashboard fictício](brand-motion-v27/examples/demo-saas/assets/sample-dashboard.svg)
 
@@ -16,7 +16,31 @@ Gera vídeos **Full HD 1920×1080, 16:9, 30 FPS**, usando Python + Playwright/Ch
 - Bibliotecas Python: Playwright, NumPy e Pillow (arquivo `requirements.txt`)
 - Chromium instalado pelo Playwright: `python -m playwright install chromium`
 
-Node.js, GSAP, Remotion, Three.js e HyperFrames **não são obrigatórios**; só use quando o roteiro realmente pedir.
+**Para usar HyperFrames (recomendado):** Node.js 22+, FFmpeg, CLI HyperFrames e skills oficiais. Python 3.10+ também é usado pelo exportador Brand Motion. GSAP, Remotion e Three.js não são necessários ao baseline; GSAP pode ser usado para novas timelines. Sem HyperFrames, use o fallback Playwright documentado abaixo.
+
+## HyperFrames — motor recomendado
+
+Além da skill Brand Motion, instale as skills oficiais do HyperFrames e o CLI:
+
+~~~powershell
+node --version
+npm install -g hyperframes
+npx skills add heygen-com/hyperframes
+npx hyperframes doctor
+~~~
+
+Crie um projeto HyperFrames, exporte o seu manifest Brand Motion e renderize:
+
+~~~powershell
+npx hyperframes init meu-video --example blank
+python .\brand-motion-v27\scripts\export_hyperframes.py --config .\brand-motion-v27\examples\demo-saas\manifest.json --project .\meu-video --replace
+cd meu-video
+npx hyperframes lint
+npx hyperframes preview
+npx hyperframes render --output final.mp4 --fps 30 --quality high
+~~~
+
+O exemplo é fictício; substitua os assets antes de publicar. O exportador utiliza o protocolo seekable do HyperFrames, mas **a execução do CLI ainda depende de validação na máquina do agente**. Neste ambiente, o npm estava indisponível, então não declaramos um render HyperFrames aprovado. Use o fallback Python se necessário. Guia detalhado: [HyperFrames e integração](brand-motion-v27/references/hyperframes.md).
 
 ## 1. Clonar
 
@@ -105,6 +129,7 @@ Crie seu projeto a partir de [`templates/project.example.json`](brand-motion-v27
 - [`brand-motion-v27/SKILL.md`](brand-motion-v27/SKILL.md) — fluxo e regras do agente
 - [`scripts/install_skill.py`](brand-motion-v27/scripts/install_skill.py) — instalação nos agentes
 - [`scripts/doctor.py`](brand-motion-v27/scripts/doctor.py) — diagnóstico
+- [`scripts/export_hyperframes.py`](brand-motion-v27/scripts/export_hyperframes.py) — exportação seekable para projetos oficiais HyperFrames
 - [`scripts/render_video.py`](brand-motion-v27/scripts/render_video.py) — captura de frames, storyboard e MP4
 - [`scripts/audio.py`](brand-motion-v27/scripts/audio.py) — trilha original e efeitos de clique
 - [`scripts/qa.py`](brand-motion-v27/scripts/qa.py) — QA de áudio, vídeo e duração
