@@ -51,11 +51,24 @@ Codex usa `<projeto>/.agents/skills/brand-motion-v27/`, Claude usa `.claude/skil
 
 Pode selecionar apenas um: `--agent codex`, `--agent claude`, `--agent opencode`, ou `--agent hermes`. Use `--dry-run` para inspecionar os destinos. Destinos existentes não são substituídos sem `--replace`. Nenhum arquivo pessoal do agente é modificado fora da pasta específica da skill.
 
-## Acionamento
+## Acionamento manual depois de instalar
+
+| Agente | Comando recomendado |
+| --- | --- |
+| OpenCode v2 | \`@brand-motion-v27\` |
+| Codex | \`$brand-motion-v27\` |
+| Claude Code | \`/brand-motion-v27\` |
+| Hermes | \`/brand-motion-v27\` |
+
+Se a skill não aparecer, reinicie a sessão, confira a instalação e, no OpenCode, confira as permissões da ferramenta \`skill\`. O caractere \`@\` é documentado para OpenCode v2, **não** como sintaxe universal.
+
+**Teste de briefing:** acione a skill com \`Quero um vídeo da minha marca; antes de produzir, faça as perguntas necessárias e peça imagens ou referências.\` O agente deve perguntar ao menos o que é a marca/produto e como obter exemplos visuais, sem renderizar imediatamente.
+
+## Acionamento (alternativo via linguagem natural)
 
 - Codex: selecionar `$brand-motion-v27`, ou pedir um vídeo e deixar o agente escolher a skill.
 - Claude Code: usar `/brand-motion-v27` ou pedir uma apresentação de produto.
-- OpenCode: solicitar a skill `brand-motion-v27` e carregar via ferramenta `skill`.
+- OpenCode v2: mencionar `@brand-motion-v27`, ou solicitar a skill `brand-motion-v27` e carregar via ferramenta `skill`.
 - Hermes: `/brand-motion-v27` (em sessões que carregaram skills).
 
 Em agentes sem detecção automática, informe o caminho de `SKILL.md` explicitamente ou cole seu conteúdo. Um agente de chat **sem acesso a shell/arquivos** pode ajudar no roteiro, mas não pode garantir MP4 executável.
