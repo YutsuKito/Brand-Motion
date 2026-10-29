@@ -54,6 +54,25 @@ npx skills update -g
 
 **Importante:** a CLI instala os arquivos da skill, **não instala automaticamente** FFmpeg, Python, HyperFrames ou os próprios agentes. Veja [dependências](brand-motion-v27/references/dependencies.md) e [instalação dos agentes](brand-motion-v27/references/install-agents.md). No Windows, se Hermes usar HERMES_HOME personalizado, confira onde a CLI instalou a skill e se Hermes lê a mesma pasta.
 
+## Como ativar a skill no chat
+
+Depois da instalação, **reinicie ou recarregue a sessão do agente** e use o acionamento nativo:
+
+| Agente | Acionamento explícito |
+| --- | --- |
+| **OpenCode (v2)** | \`@brand-motion-v27\` |
+| **Codex** | \`$brand-motion-v27\` |
+| **Claude Code** | \`/brand-motion-v27\` |
+| **Hermes Agent** | \`/brand-motion-v27\` |
+
+**Exemplo de mensagem:** \`Use a skill brand-motion-v27. Quero criar um vídeo promocional para minha marca; comece com o briefing e peça as imagens e referências antes de gerar qualquer vídeo.\`
+
+A chamada específica só funciona **depois de a instalação ter sido detectada**. No OpenCode antigo, solicite em texto que o agente carregue a skill pela ferramenta de skills; \`@\` não é um atalho universal dos quatro agentes. A skill também pode ser escolhida automaticamente pelo modelo quando o pedido e as permissões forem compatíveis.
+
+### O agente fará perguntas antes do vídeo?
+
+Sim. O \`SKILL.md\` exige que o agente entenda o produto, solicite fotos/screenshots/logo e links de referência, confirme a finalidade e CTA e então crie storyboard e vídeo. Se o usuário já tiver enviado essas informações, elas não devem ser solicitadas novamente. **A primeira conversa ainda precisa ser testada no runtime de cada agente.**
+
 ## Instalação manual — alternativa via clone
 
 ```bash
