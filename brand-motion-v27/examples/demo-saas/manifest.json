@@ -1,0 +1,45 @@
+{
+  "project_id": "brand-motion-example",
+  "brand": {
+    "name": "NOVA MARCA",
+    "website": "https://example.com",
+    "logo": null,
+    "accent": "#b58c12",
+    "background": "#f8fafc"
+  },
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "explain_seconds": 4,
+    "focus_seconds": 3.5,
+    "transition_seconds": 0.9,
+    "cta_seconds": 5,
+    "music": "original"
+  },
+  "cta": {
+    "headline": "Conheça a NOVA MARCA",
+    "primary": "Conheça o produto",
+    "secondary": "Veja nossas opções",
+    "website_text": "example.com"
+  },
+  "scenes": [
+    {
+      "label": "01 / VISÃO GERAL",
+      "title": "Seu painel.",
+      "explanation": "Visualize indicadores e decisões em um lugar.",
+      "kind": "software",
+      "asset": "assets/sample-dashboard.svg",
+      "click_target": {"x": 0.105, "y": 0.29, "label": "Produtos"},
+      "asset_status": "placeholder"
+    },
+    {
+      "label": "02 / PRODUTOS",
+      "title": "Seu catálogo.",
+      "explanation": "Organize itens, pedidos e oportunidades.",
+      "kind": "software",
+      "asset": "assets/sample-products.svg",
+      "asset_status": "placeholder"
+    }
+  ]
+}

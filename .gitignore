@@ -1,0 +1,30 @@
+# Dados privados e credenciais
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+*.sqlite
+*.db
+# Mídia e artefatos de renderização
+output/
+frames/
+rendered/
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.zip
+*.7z
+# Python / editor
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,10 @@
+{
+  "project_id": "demo-product",
+  "brand": {"name":"ATELIÊ EXEMPLO","website":"https://example.com","logo":null,"accent":"#ae7d37","background":"#faf8f3"},
+  "video": {"width":1920,"height":1080,"fps":30,"explain_seconds":4,"focus_seconds":3.5,"transition_seconds":0.9,"cta_seconds":5,"music":"original"},
+  "cta": {"headline":"Conheça a coleção","primary":"Ver produtos","secondary":"Saiba mais","website_text":"example.com"},
+  "scenes": [
+    {"label":"01 / PRODUTO","title":"Detalhes que importam.","explanation":"Apresente textura, acabamento e benefícios verificados.","kind":"product","asset":"assets/product-a.svg","asset_status":"placeholder"},
+    {"label":"02 / USO","title":"Em qualquer ocasião.","explanation":"Mostre o uso do produto com fotos reais da marca.","kind":"product","asset":"assets/product-b.svg","asset_status":"placeholder"}
+  ]
+}
