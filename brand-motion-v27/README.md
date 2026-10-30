@@ -48,7 +48,7 @@ npx hyperframes preview
 npx hyperframes render --output final.mp4 --fps 30 --quality high
 ~~~
 
-Não anuncie os exemplos fictícios como dados reais. O CLI oficial não pôde ser executado neste ambiente por falta de acesso ao npm, então lint e render devem ser validados localmente. Consulte [references/hyperframes.md](references/hyperframes.md).
+Não anuncie os exemplos fictícios como dados reais. Consulte [references/hyperframes.md](references/hyperframes.md) para o protocolo de timeline HyperFrames e o relatório da validação local.
 
 ## 3 — Fallback Python/Playwright
 

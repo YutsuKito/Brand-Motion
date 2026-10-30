@@ -49,8 +49,7 @@ def export(config: Path, destination: Path, replace: bool, audio: Path | None) -
     html = SOURCE_HTML.read_text(encoding="utf-8")
     video = project["video"]
     root_tag = (
-        '<div id="stage" class="clip" data-composition-id="brand-motion-v27" '
-        f'data-start="0" data-duration="{duration:.4f}" data-track-index="0" '
+        '<div id="stage" data-composition-id="brand-motion-v27" data-start="0" '
         f'data-width="{video["width"]}" data-height="{video["height"]}">'
     )
     if '<div id="stage">' not in html:
@@ -80,11 +79,15 @@ def export(config: Path, destination: Path, replace: bool, audio: Path | None) -
     protocol = f"""
 <script>
 window.initProject({payload});
-// Interface seekable documentada pelo HyperFrames; sem depender de tempo de relógio.
-window.__hf = {{
-  duration: {duration:.4f},
-  seek: function(time) {{ window.seek(time); }}
-}};
+// HyperFrames controla a composição por uma timeline GSAP pausada e registrada.
+window.__timelines = window.__timelines || {{}};
+const brandMotionDriver = {{ time: 0 }};
+const brandMotionTimeline = gsap.timeline({{ paused: true }});
+brandMotionTimeline.to(brandMotionDriver, {{
+  time: {duration:.4f}, duration: {duration:.4f}, ease: "none",
+  onUpdate: function() {{ window.seek(brandMotionDriver.time); }}
+}});
+window.__timelines["brand-motion-v27"] = brandMotionTimeline;
 </script>
 """
     html = html.replace("</body>", protocol + "</body>")

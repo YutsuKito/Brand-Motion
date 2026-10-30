@@ -9,7 +9,7 @@
 - **Python >=3.10:** script export_hyperframes.py para manifest e assets.
 - **Diagnóstico:** npx hyperframes doctor, depois npx hyperframes lint/render dentro do projeto.
 
-Para converter um manifest em projeto HyperFrames, veja [hyperframes.md](hyperframes.md). O CLI ainda precisa ser testado no ambiente final: não foi possível baixar o pacote pelo npm neste ambiente.
+Para converter um manifest em projeto HyperFrames, veja [hyperframes.md](hyperframes.md). O CLI 0.8.217 passou doctor, lint, preview e render no teste local isolado; confirme as dependências com `npx hyperframes doctor` na máquina de produção.
 
 ## Obrigatórias somente para o fallback Python
 

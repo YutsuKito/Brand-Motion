@@ -47,7 +47,7 @@ Se faltar uma imagem essencial e não houver ferramenta de captação/geração 
 
 ## Motor de vídeo: HyperFrames preferencial
 
-Para novos projetos, **priorize HyperFrames oficial**, não afirme usá-lo quando o MP4 foi produzido com o fallback. Antes de executar downloads ou instalações, peça consentimento. Siga [references/hyperframes.md](references/hyperframes.md): Node.js 22+, FFmpeg, HyperFrames CLI e skills oficiais do HyperFrames. O motor aceita composições HTML seekable pelo protocolo window.__hf; o exportador da Brand Motion gera uma composição a partir do manifest e utiliza os mesmos 4s explicação / 3,5s zoom centralizado / retorno / CTA.
+Para novos projetos, **priorize HyperFrames oficial**, não afirme usá-lo quando o MP4 foi produzido com o fallback. Antes de executar downloads ou instalações, peça consentimento. Siga [references/hyperframes.md](references/hyperframes.md): Node.js 22+, FFmpeg e HyperFrames CLI. O exportador gera uma composição a partir do manifest e registra uma timeline GSAP pausada, controlada pelo HyperFrames, com 4s de explicação / 3,5s de zoom centralizado / retorno / CTA.
 
 Fluxo preferencial após briefing, assets e validação do manifest:
 
@@ -61,7 +61,7 @@ npx hyperframes preview
 npx hyperframes render --output final.mp4 --fps 30 --quality high
 ~~~
 
-Os caminhos relativos variam conforme a pasta do agente; use o caminho real do script. Não reutilize as imagens fictícias dos exemplos como se fossem telas da marca. Quando o CLI estiver indisponível ou falhar, documente a falha e use o renderizador Python (passos abaixo) somente como fallback. O exportador HyperFrames foi implementado, mas o CLI não pôde ser testado neste ambiente; nunca o declare validado sem rodar lint/render/QA na máquina de destino.
+Os caminhos relativos variam conforme a pasta do agente; use o caminho real do script. Não reutilize as imagens fictícias dos exemplos como se fossem telas da marca. Quando o CLI estiver indisponível ou falhar, documente a falha e use o renderizador Python (passos abaixo) somente como fallback. Execute lint e render HyperFrames, depois inspecione quadros de abertura, foco, navegação e CTA antes de aprovar.
 
 ## Pipeline obrigatório
 
