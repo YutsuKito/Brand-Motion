@@ -1,7 +1,8 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=1920,height=1080,initial-scale=1"><script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script><style>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=1920,height=1080,initial-scale=1"><script src="assets/gsap.min.js"></script><style>
 *{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;overflow:hidden}body{font-family:Inter,'Segoe UI',Arial,sans-serif;color:#111d2f;-webkit-font-smoothing:antialiased}
 #stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:linear-gradient(145deg,#fff 0%,var(--bg,#f8fafc) 90%)}
 #stage:before{content:'';position:absolute;inset:-40px;background:radial-gradient(ellipse 480px 350px at 6% 65%,#eebf3715,transparent),radial-gradient(ellipse 700px 500px at 85% 80%,#8bb6dc15,transparent)}
+#three-stage{position:absolute;inset:0;width:1920px;height:1080px;z-index:2;pointer-events:none;opacity:.42}
 #branding{position:absolute;left:77px;top:31px;display:flex;align-items:center;gap:14px;font-weight:850;font-size:28px;letter-spacing:1.5px;z-index:7;color:#192335}
 #branding .symbol{width:43px;height:43px;border-radius:13px;display:grid;place-items:center;background:#15223b;color:#ffd75a;font-size:26px;font-weight:850}
 #branding img{width:48px;height:48px;object-fit:contain}
@@ -31,7 +32,7 @@
 #outro .actions{display:flex;gap:15px;align-items:center}#outro .primary,#outro .secondary{font-size:24px;font-weight:800;border-radius:12px;padding:21px 32px}
 #outro .primary{background:#162033;color:#fff}#outro .secondary{background:#fff;border:1px solid #d7dee8;color:#162033}
 #outro .url{font-size:26px;font-weight:850;color:var(--accent)}
-</style></head><body><div id="stage">
+</style></head><body><div id="stage"><canvas id="three-stage" width="1920" height="1080" aria-hidden="true"></canvas>
 <div id="branding"><div class="symbol" id="brandSymbol">◆</div><img id="brandLogo" style="display:none"><span id="brandName">MARCA</span></div>
 <div id="guide"><div class="shortbar"></div><div class="label" id="guideLabel"></div><h1 id="guideTitle"></h1><p id="guideExplanation"></p></div>
 <div id="visual"><div id="browser"><div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="address" id="address"></span></div><div id="content"><img id="imgCurrent"><img class="next" id="imgNext"></div></div><div id="photo"><img id="photoCurrent"><img class="next" id="photoNext"></div></div>
@@ -41,7 +42,7 @@
 const $=s=>document.querySelector(s), clamp=(n,a=0,b=1)=>Math.max(a,Math.min(n,b)), smooth=t=>{t=clamp(t);return t*t*(3-2*t);};
 let project=null,scenes=[],timing={},total=0,sceneLen=0;
 function initProject(input){
- project=input;scenes=project.scenes;
+ project=input;window.__brandMotionProject=project;scenes=project.scenes;
  timing={e:project.video.explain_seconds,f:project.video.focus_seconds,r:project.video.transition_seconds,cta:project.video.cta_seconds};
  sceneLen=timing.e+timing.f+timing.r;total=scenes.length*sceneLen+timing.cta;
  document.documentElement.style.setProperty('--accent',project.brand.accent||'#b58c12');document.documentElement.style.setProperty('--bg',project.brand.background||'#f8fafc');
@@ -60,6 +61,7 @@ function initProject(input){
 function seek(t){
  if(!project)return;
  t=clamp(t,0,total);
+ window.__currentTime=t;
  let idx=Math.min(scenes.length-1,Math.floor(t/sceneLen));
  let local=t-idx*sceneLen;
  let scene=scenes[idx];let next=scenes[Math.min(idx+1,scenes.length-1)];
@@ -110,7 +112,20 @@ function seek(t){
  $('#visual').style.opacity=String(1-end);
  $('#guide').style.opacity=String(guideOpacity*(1-end));
  let clouds=[...document.querySelectorAll('.cloud')];for(let i=0;i<clouds.length;i++){clouds[i].style.transform=`translate(${Math.sin(t*.55+i*1.4)*18}px,${Math.cos(t*.33+i)*10}px)`;}
+ if(window.__brandMotionThree){window.__brandMotionThree.renderAt(t,{accent:project.brand.accent||'#b58c12',background:project.brand.background||'#f8fafc',phase:local<E?'explain':local<E+F?'focus':'transition',visible:end<.96});}
  window.frameState={sceneIndex:idx,phase:local<E?'explanation':local<E+F?'focus':'navigation',center:{x:xx,y:yy},zoom,guideOpacity:guideOpacity*(1-end),click:!!target&&idx<scenes.length-1&&Math.abs(local-clickTime)<.017,clickTime:idx*sceneLen+clickTime,cta:end};
 }
 window.initProject=initProject;window.seek=seek;
+</script><script type="module">
+import { createBrandMotionThree } from "./assets/brand-motion-three.js";
+window.__hf = window.__hf || {};
+window.__hf.buildReady = window.__hf.buildReady || {};
+window.__hf.buildReady["brand-motion-v27"] = Promise.resolve().then(() => {
+  const api = createBrandMotionThree(document.querySelector("#three-stage"));
+  window.__brandMotionThree = api;
+  const brand = window.__brandMotionProject?.brand || {};
+  api.renderAt(window.__currentTime || 0, {accent:brand.accent,background:brand.background});
+  return api;
+});
 </script></body></html>
+

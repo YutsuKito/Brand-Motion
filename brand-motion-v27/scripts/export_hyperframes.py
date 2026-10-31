@@ -8,11 +8,15 @@ import argparse
 import base64
 import json
 import mimetypes
+import re
+import shutil
 from pathlib import Path
 from validate_project import load
 
 SKILL = Path(__file__).resolve().parents[1]
 SOURCE_HTML = SKILL / "engine" / "composition.html"
+THREE_SCENE = SKILL / "engine" / "three-scene.js"
+RELATIVE_IMPORT = re.compile(r"(?:from\s*|import\s*)[\"'](\.[^\"']+)[\"']")
 
 def as_data_uri(path: Path) -> str:
     mime = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
@@ -33,7 +37,61 @@ def embed_assets(config: Path, project: dict) -> dict:
         result["brand"]["logo"] = local_asset(result["brand"]["logo"])
     return result
 
-def export(config: Path, destination: Path, replace: bool, audio: Path | None) -> Path:
+def copy_three_modules(build_dir: Path, assets_dir: Path) -> None:
+    """Copy Three.js and its relative build imports locally, preserving module paths."""
+    build_dir = build_dir.resolve()
+    entry = build_dir / "three.module.js"
+    if not entry.is_file():
+        raise FileNotFoundError(
+            f"Three.js não encontrado em {build_dir}; instale a dependência ou passe --three-build."
+        )
+    target_root = assets_dir / "three"
+    target_root.mkdir(parents=True, exist_ok=True)
+    pending = [entry]
+    copied: set[Path] = set()
+    while pending:
+        source = pending.pop().resolve()
+        if source in copied:
+            continue
+        if not source.is_relative_to(build_dir) or not source.is_file():
+            raise ValueError(f"Módulo Three.js inválido: {source}")
+        relative = source.relative_to(build_dir)
+        target = target_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+        copied.add(source)
+        source_text = source.read_text(encoding="utf-8")
+        for specifier in RELATIVE_IMPORT.findall(source_text):
+            imported = (source.parent / specifier).resolve()
+            if imported.suffix == "":
+                imported = imported.with_suffix(".js")
+            if not imported.is_file():
+                raise FileNotFoundError(f"Import relativo do Three.js não encontrado: {imported}")
+            pending.append(imported)
+
+    license_file = build_dir.parent / "LICENSE"
+    if license_file.is_file():
+        shutil.copy2(license_file, target_root / "LICENSE")
+
+def prepare_local_runtime(project: Path, three_build: Path | None) -> None:
+    """Ensure the exported composition can load GSAP and Three.js without network access."""
+    assets_dir = project / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    gsap = assets_dir / "gsap.min.js"
+    if not gsap.is_file():
+        local_gsap = project / "node_modules" / "gsap" / "dist" / "gsap.min.js"
+        if not local_gsap.is_file():
+            raise FileNotFoundError(
+                "GSAP não encontrado localmente. Instale-o após autorização do usuário "
+                "ou use o arquivo assets/gsap.min.js criado pelo HyperFrames."
+            )
+        shutil.copy2(local_gsap, gsap)
+
+    build_dir = three_build or (project / "node_modules" / "three" / "build")
+    copy_three_modules(build_dir, assets_dir)
+    shutil.copy2(THREE_SCENE, assets_dir / "brand-motion-three.js")
+
+def export(config: Path, destination: Path, replace: bool, audio: Path | None, three_build: Path | None) -> Path:
     config = config.resolve()
     destination = destination.resolve()
     project, duration, errors, warnings = load(config)
@@ -46,6 +104,7 @@ def export(config: Path, destination: Path, replace: bool, audio: Path | None) -
     target = destination / "index.html"
     if target.exists() and not replace:
         raise FileExistsError("index.html já existe; faça backup e passe --replace")
+    prepare_local_runtime(destination, three_build)
     html = SOURCE_HTML.read_text(encoding="utf-8")
     video = project["video"]
     root_tag = (
@@ -94,10 +153,11 @@ window.__timelines["brand-motion-v27"] = brandMotionTimeline;
     target.write_text(html, encoding="utf-8")
     print(f"HyperFrames: {target}")
     print(f"Duração: {duration:.2f}s | {video['width']}x{video['height']} @ {video['fps']}fps")
+    print("Runtime local: HyperFrames + GSAP + Three.js")
     print("Próximos passos (dentro do projeto):")
-    print("  npx hyperframes lint")
+    print("  npx hyperframes check --json")
     print("  npx hyperframes preview")
-    print(f"  npx hyperframes render --output final.mp4 --fps {video['fps']} --quality high")
+    print(f"  npx hyperframes render --output final.mp4 --fps {video['fps']} --quality delivery")
     return target
 
 def main():
@@ -106,8 +166,10 @@ def main():
     parser.add_argument("--project", required=True, type=Path, help="projeto já inicializado pelo CLI")
     parser.add_argument("--replace", action="store_true", help="permite substituir index.html existente")
     parser.add_argument("--audio", type=Path, help="faixa com direitos de uso confirmados")
+    parser.add_argument("--three-build", type=Path, help="pasta build local do pacote Three.js; padrão: projeto/node_modules/three/build")
     args = parser.parse_args()
-    export(args.config, args.project, args.replace, args.audio)
+    export(args.config, args.project, args.replace, args.audio, args.three_build)
 
 if __name__ == "__main__":
     main()
+

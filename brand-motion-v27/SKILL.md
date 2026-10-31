@@ -1,11 +1,10 @@
 ---
 name: brand-motion-v27
-description: Produz vídeos comerciais demonstrativos para SaaS, aplicativos, sites, lojas e produtos físicos no estilo V27: texto breve por 4 s, zoom do produto centralizado por 3,5 s, navegação sincronizada, CTA e exportação MP4 com QA. Use quando alguém pedir vídeo de produto ou apresentação animada com imagens, interfaces ou motion graphics.
-compatibility: Codex, Claude Code, OpenCode, Hermes e agentes que leem Agent Skills SKILL.md e podem executar Python, Chromium e FFmpeg.
+description: Produz vídeos comerciais demonstrativos para SaaS, aplicativos, sites, lojas e produtos físicos no estilo V27. Usa HyperFrames, GSAP e Three.js; analisa vídeos de referência e recria sua linguagem visual com assets autorizados ou originais. Use para vídeos de produto e motion graphics.
 metadata:
   format: "16:9"
-  engine: hyperframes-preferred; playwright-ffmpeg-fallback
-  version: "1.0.0"
+  engine: hyperframes-required; gsap-required; threejs-required
+  version: "1.1.0"
 ---
 
 # Brand Motion V27 — produção universal de vídeos
@@ -32,10 +31,14 @@ Faça perguntas curtas ao usuário **apenas sobre dados ainda desconhecidos** e 
 1. **Qual marca/produto/serviço?** Nome, site oficial e o que vende/oferece.
 2. **Qual o objetivo e CTA?** Demonstrar, vender, divulgar, testar grátis, comprar, conhecer planos, reservar etc. Confirme ofertas e URLs.
 3. **Quais materiais reais existem?** Peça logo/favicon, capturas de telas, imagens do produto, fotos do estabelecimento, vídeos ou link do site. Pergunte se pode usar esses assets na peça.
-4. **Há referência visual?** Peça um vídeo, link, imagem ou exemplo de estilo. Explique o estilo V27 descrito nesta skill e peça referências visuais próprias do usuário, sem impor identidade de outra marca.
+4. **Há referência visual?** Se o usuário anexou um vídeo, analise-o sem pedir outra referência. Caso contrário, peça um vídeo, link ou imagem; pergunte se ele quer reutilizar assets exatos da referência ou apenas recriar a linguagem visual.
 5. **Onde vai publicar?** Por padrão entregue 16:9, 1920×1080, 30 FPS; pergunte quando houver preferência diferente de formato/duração, idioma ou trilha.
 
 Se faltar uma imagem essencial e não houver ferramenta de captação/geração permitida, use um placeholder **apenas na prévia** e informe o que falta para uma versão final. Não reproduza slogans, ofertas, preços, logos, pessoas ou resultados não verificados.
+
+## Vídeo de referência
+
+Quando o usuário enviar um vídeo, leia [references/style-reference.md](references/style-reference.md) e faça a análise visual antes de desenhar cenas. Preserve a sequência V27 e adapte ao vídeo o ritmo, a paleta, a tipografia, a composição, as transições, a iluminação e os motion graphics. Reutilize os assets do vídeo apenas quando o usuário tiver direito de uso; caso contrário, crie alternativas originais com linguagem visual semelhante. Registre a origem e a licença de cada asset.
 
 ## Estilo inegociável da V27
 
@@ -45,35 +48,40 @@ Se faltar uma imagem essencial e não houver ferramenta de captação/geração 
 - **Final (~5 s)**: feche/retire a interface; fundo claro; marca, CTA principal, CTA secundário opcional, domínio e nuvens discretas atrás do conteúdo. CTA isolado e legível.
 - Não use boxes gigantes, destaques/retângulos nos campos, nem motion simultâneo ao texto; o software ou produto deve ser protagonista. Texto nunca se sobrepõe ao conteúdo.
 
-## Motor de vídeo: HyperFrames preferencial
+## Motor obrigatório: HyperFrames + GSAP + Three.js
 
-Para novos projetos, **priorize HyperFrames oficial**, não afirme usá-lo quando o MP4 foi produzido com o fallback. Antes de executar downloads ou instalações, peça consentimento. Siga [references/hyperframes.md](references/hyperframes.md): Node.js 22+, FFmpeg e HyperFrames CLI. O exportador gera uma composição a partir do manifest e registra uma timeline GSAP pausada, controlada pelo HyperFrames, com 4s de explicação / 3,5s de zoom centralizado / retorno / CTA.
+Todo MP4 final deve ser produzido com **HyperFrames**, com uma timeline **GSAP** pausada e registrada, e pelo menos um elemento 3D intencional renderizado com **Three.js**. HyperFrames controla composição, busca e render; GSAP dirige o tempo; Three.js desenha o elemento 3D. O Three.js deve refletir o produto ou a referência, sem virar decoração genérica: quando o vídeo de referência for 2D, use um acento 3D discreto, como profundidade em um símbolo ou objeto da marca.
 
-Fluxo preferencial após briefing, assets e validação do manifest:
+Antes de instalar dependências, peça consentimento. Use arquivos locais e versões fixadas pelo lockfile; não use CDN ou requisições de rede durante a composição/render. Se o stack estiver ausente e o usuário não autorizar a instalação, pare antes do MP4 final e explique o bloqueio. O renderizador Python/Playwright é legado e não substitui o stack obrigatório.
+
+Siga [references/hyperframes.md](references/hyperframes.md). O exportador gera uma composição a partir do manifest, carrega GSAP e Three.js localmente e liga `window.seek(time)` ao render do Three.js. Toda imagem deve ser função determinística do tempo recebido, sem relógio, timers ou loop autônomo.
+
+Fluxo obrigatório após briefing, análise de referência, assets e validação do manifest:
 
 ~~~bash
 npx hyperframes doctor
 npx hyperframes init meu-video --example blank
+npm install --save-exact hyperframes gsap three
 python scripts/export_hyperframes.py --config CAMINHO/manifest.json --project meu-video --replace
 cd meu-video
-npx hyperframes lint
+npx hyperframes check --json
 npx hyperframes preview
-npx hyperframes render --output final.mp4 --fps 30 --quality high
+npx hyperframes render --output final.mp4 --fps 30 --quality delivery
 ~~~
 
-Os caminhos relativos variam conforme a pasta do agente; use o caminho real do script. Não reutilize as imagens fictícias dos exemplos como se fossem telas da marca. Quando o CLI estiver indisponível ou falhar, documente a falha e use o renderizador Python (passos abaixo) somente como fallback. Execute lint e render HyperFrames, depois inspecione quadros de abertura, foco, navegação e CTA antes de aprovar.
+Os caminhos relativos variam conforme a pasta do agente; use o caminho real do script. Instale apenas dependências ausentes e só depois do consentimento. Não reutilize as imagens fictícias dos exemplos como se fossem telas da marca. Não use renderizador alternativo para o MP4 final. Execute `check`, prévia e render HyperFrames; depois inspecione abertura, foco, navegação, acento 3D e CTA.
 
 ## Pipeline obrigatório
 
-1. **Auditar ambiente:** rode `npx hyperframes doctor` para o modo preferencial e `python scripts/doctor.py` para o fallback. Consulte `references/dependencies.md`; instalar somente com consentimento, conferindo licenças e permissões. Verifique Python, Playwright/Chromium, Pillow, NumPy e FFmpeg. Nunca force instalação de browser em máquina corporativa.
-2. **Pesquisar e coletar:** use materiais do cliente primeiro. Faça capturas do site apenas se a ferramenta e as permissões de acesso existirem. Documente fontes/licenças em `assets-ledger.csv`. Jamais remova marcas d'água nem use imagens protegidas sem licença. Se for UI autenticada, solicite screenshots ou acesso aprovado, sem pedir senhas em chat.
-3. **Roteirizar:** 3 a 7 cenas (painel, função, benefício, exemplo, relatório etc.), cada uma com título curto, uma frase descritiva e imagem/tela associada. Para lojas e produtos físicos, use fotografia/B-roll e movimento de câmera, **não simule cliques**.
-4. **Preparar projeto:** copie `templates/project.example.json` e `templates/assets` para uma pasta de produção. Atualize marca, site, ícones, imagens e cenas. O arquivo `manifest.json` é a única fonte de duração, texto, CTA, assets e navegação do template genérico.
-5. **Validar fontes e timeline:** `python scripts/validate_project.py --config caminho/manifest.json`. As telas devem ser reais ou identificadas como ilustrações. Para clique, registre alvo `click_target` normalizado e verificado manualmente na **imagem da cena de origem** (ex.: item Aplicações). Se não houver essa confirmação, omita o clique.
-6. **Gerar prévia** com `npx hyperframes preview` no projeto exportado; para fallback use `python scripts/render_video.py --config caminho/manifest.json --output caminho/output --preview-only`. Examine abertura, pontos de foco, trocas de cena, último quadro e CTA. Ajuste composições antes de renderizar tudo.
-7. **Renderizar:** use HyperFrames como padrão (comandos acima). Quando não estiver disponível, execute o fallback com `python scripts/render_video.py --config caminho/manifest.json --output caminho/output`. Use FFmpeg H.264/AAC e música original gerada localmente, ou faixa externa com licença confirmada. Exporte MP4, contact sheet, timeline e QA.
-8. **QA final:** executar `python scripts/qa.py --video caminho/output/final.mp4 --config caminho/manifest.json`. Verifique 16:9, duração, FPS, áudio, quadro centralizado, clipping, sincronismo click/evento, fontes, CTA e reprodução; não declare aprovado aquilo que não foi testado.
-9. **Entregar** MP4, storyboard, assets com proveniência, projeto editável e sumário das verificações. Sem afirmar ser gravação ao vivo se for reconstrução ilustrativa.
+1. **Auditar o stack:** rode `npx hyperframes doctor`, confirme GSAP e Three.js no projeto e consulte `references/dependencies.md`. Instale somente o que faltar, após consentimento. Python pode apoiar inspeção e QA; não use outro motor para o MP4 final.
+2. **Analisar referência e coletar assets:** para vídeo de referência, aplique `references/style-reference.md`. Use materiais do cliente primeiro, registre origem/licença em `assets-ledger.csv` e não reutilize elementos protegidos sem autorização. Faça capturas de site somente com acesso permitido; nunca peça senhas em chat.
+3. **Roteirizar:** crie 3 a 7 cenas com título curto, frase descritiva e imagem/tela associada. Preserve o ritmo e a linguagem visual da referência, sem alterar a estrutura V27. Planeje pelo menos um elemento 3D Three.js conectado à marca/produto. Para lojas e produtos físicos, use fotografia/B-roll e movimento de câmera; não simule cliques.
+4. **Preparar projeto:** copie `templates/project.example.json` e os assets autorizados para a pasta de produção. Atualize marca, site, ícones, imagens e cenas. O manifest é a fonte de duração, texto, CTA, assets e navegação; o storyboard/styleboard registra as escolhas de design.
+5. **Validar fontes e timeline:** rode `python scripts/validate_project.py --config caminho/manifest.json`. Garanta GSAP local, módulo Three.js local e timeline seekable. Para clique, confirme manualmente o alvo na imagem da cena; sem confirmação, omita clique e som.
+6. **Pré-visualizar:** use `npx hyperframes preview` e `npx hyperframes snapshot --review`. Examine abertura, foco, transições, movimento 3D, último quadro e CTA. Ajuste a composição antes do render final.
+7. **Renderizar:** use apenas HyperFrames para o MP4 final. Use FFmpeg/ffprobe para inspeção, não como motor alternativo. Exporte MP4, contact sheet, timeline, QA e projeto editável.
+8. **QA final:** execute `python scripts/qa.py --video caminho/output/final.mp4 --config caminho/manifest.json`. Verifique 16:9, duração, FPS, áudio, centro geométrico, clipping, sincronismo, fonts, CTA, consistência com a referência e render 3D sem flicker/falhas de seek. Não declare aprovado o que não foi testado.
+9. **Entregar** MP4, storyboard/styleboard, assets com proveniência, projeto editável e resumo do QA. Sem afirmar ser gravação ao vivo se for reconstrução ilustrativa.
 
 ## Modo de composição
 
@@ -82,7 +90,9 @@ Os caminhos relativos variam conforme a pasta do agente; use o caminho real do s
 - `kind: "store"`: imagens de loja, vitrines, pratos/serviços ou e-commerce (sem cursor salvo demonstração real de interface).
 - `kind: "service"`: local/serviço e imagens reais de execução, sem promessas inventadas.
 
-Leia `references/storyboard.md` e `references/qa-checklist.md` antes de renderizar. Se a marca exigir animações mais avançadas ou vídeo real, integre assets gerados por ferramentas apropriadas; o motor incluído é um **baseline confiável de motion 2D** e não substitui geradores 3D/video-to-video.
+Todo modo inclui um acento 3D Three.js ligado à identidade ou à referência; mantenha-o fora da área de leitura e do conteúdo essencial do produto. A cena Three.js precisa obedecer ao seek do HyperFrames por meio do tempo dirigido por GSAP.
+
+Leia `references/storyboard.md` e `references/qa-checklist.md` antes de renderizar; com vídeo de referência, leia também `references/style-reference.md`. O Three.js fornece elementos 3D gerados na composição, mas não substitui um modelo/produto real: use arquivos autorizados ou identifique reconstruções ilustrativas.
 
 ## Compatibilidade e montagem
 
@@ -91,3 +101,4 @@ A skill usa o padrão aberto **Agent Skills**, `SKILL.md` com YAML. Um mesmo con
 ## Referência do estilo V27
 
 A técnica é inspirada no padrão de produção V27: explicação por 4 segundos, foco geométrico com zoom por 3,5 segundos, clique sincronizado em demonstrações de software e CTA isolado. Este pacote **não** inclui vídeo, telas, logos nem código proprietário de uma marca. Use apenas imagens fornecidas/autorizadas pelo usuário e substitua os SVGs de exemplo antes de publicar.
+
